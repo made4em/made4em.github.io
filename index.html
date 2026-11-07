@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="description" content="Read images and PDFs, annotate them, and look up words with translation, definitions and pronunciation." />
+    <title>4em</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <script type="module" crossorigin src="./assets/index-CEr9N94F.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CIIO73Bq.css">
+  </head>
+  <body>
+    <!-- The warning stands while the app is being worked on; `hidden` is how it is taken down
+         for a while without losing the text or the way it is drawn. -->
+    <div class="announce" id="announce" role="status" hidden>
+      <span class="announce-icon" aria-hidden="true">🚧</span>
+      <p>4em is still being built. New versions go out often, and one of them may clear the files and
+        notes kept in your browser — so do export anything you’d like to keep.</p>
+      <button type="button" class="ui-button ui-button--ghost announce-x" data-act="dismiss" aria-label="Hide this notice" title="Hide this notice">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </div>
+    <header class="toolbar" inert data-blocked-by-loader>
+      <div class="tb-left">
+        <div class="tb-start">
+        <span class="brand">made4em</span>
+        <button id="btnOpen" class="ui-button ui-button--ghost tb-btn" title="Open a file, reopen a recent one, or export (Ctrl+O)" aria-haspopup="menu" aria-expanded="false" aria-controls="recentMenu" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.5h7A1.5 1.5 0 0 1 19 10v7a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 3 17z" /></svg>
+          <span>File</span><span class="caret" aria-hidden="true">▾</span>
+        </button>
+        </div>
+        <div class="tb-file" id="headerFile"><button class="ui-button ui-button--ghost file" id="fileInfo" aria-haspopup="menu" aria-expanded="false" aria-controls="filesMenu" disabled type="button">No file open</button></div>
+        <button id="btnSettings" class="ui-button ui-button--ghost icon-sq" title="Settings" aria-label="Settings" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3.2" /><path d="M19.4 14.5a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1v.3a2 2 0 1 1-4 0v-.2a1.6 1.6 0 0 0-2.8-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7h-.3a2 2 0 1 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1v-.3a2 2 0 1 1 4 0v.2a1.6 1.6 0 0 0 2.8 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7h.3a2 2 0 1 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z" /></svg>
+        </button>
+      </div>
+      <div class="tb-split" aria-hidden="true"></div>
+      <!-- The bar is divided where the stage below it is divided: this segment sits over the side
+           panel's column and is that panel's own header. -->
+      <div class="tb-panel">
+        <span class="tb-panel-name"></span>
+        <button id="btnSections" class="ui-button ui-button--ghost icon-sq" title="Choose which sections the panel shows" aria-haspopup="true" aria-expanded="false" aria-controls="sectionsMenu" aria-label="Sections" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="16" height="5" rx="1.5" /><rect x="4" y="12" width="16" height="3" rx="1.5" /><rect x="4" y="18" width="16" height="3" rx="1.5" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main inert data-blocked-by-loader>
+      <section class="viewer-wrap">
+        <div class="viewport-layout" id="viewports">
+        <section class="viewport-pane" id="primaryPane" aria-label="First document view" data-active="true">
+          <div class="viewport-bar"></div>
+          <div class="viewer" id="viewer" tabindex="0" data-tool="lookup" aria-label="Document">
+          <div class="empty" id="emptyState">
+            <div class="empty-box">
+              <div class="empty-icon">📄</div>
+              <h2>Open an image or PDF</h2>
+              <p>Drop a file here, or <button id="btnOpenEmpty" class="ui-button ui-button--link link" type="button">choose a file</button>.</p>
+              <p class="muted">Then drag over any words to translate them and see definitions, IPA and pronunciation.</p>
+              <div class="empty-recent" id="emptyRecent" hidden></div>
+            </div>
+          </div>
+          </div>
+        </section>
+        <div class="splitter viewport-splitter" id="viewportSplitter" role="separator" aria-orientation="vertical" aria-label="Resize document views" tabindex="0" title="Drag to resize the views · double-click to reset" hidden></div>
+        <section class="viewport-pane" id="secondaryPane" aria-label="Second document view" data-active="false" hidden>
+          <div class="viewport-bar"><button class="ui-button ui-button--ghost file" id="fileInfoSecondary" aria-haspopup="menu" aria-expanded="false" aria-controls="filesMenu" disabled type="button">No file open</button></div>
+          <div class="viewer" id="viewerSecondary" tabindex="0" data-tool="lookup" aria-label="Second document viewport"></div>
+        </section>
+        </div>
+        <div class="drop-hint" id="dropHint" hidden>Drop to open</div>
+        <div class="floatbar" id="floatbar" role="toolbar" aria-label="Tools and zoom" hidden>
+          <div class="group" id="tools" role="group" aria-label="Tools">
+            <button data-tool="lookup" class="ui-button ui-button--ghost active" title="Lookup: drag over words to translate and define (L). Alt+drag works in any tool." type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.4-4.4" /></svg><span class="tool-label">Lookup</span></button>
+            <button data-tool="select" title="Select, move, resize; double-click text to edit; Delete removes (V)" class="ui-button ui-button--ghost " type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l12 7-5.5 1.5L10 18z" /></svg><span class="tool-label">Select</span></button>
+            <button data-tool="line" title="Straight line; Shift snaps to 45° (N)" class="ui-button ui-button--ghost " type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5" /></svg><span class="tool-label">Line</span></button>
+            <button data-tool="ellipse" title="Circle or ellipse; Shift for a perfect circle (C)" class="ui-button ui-button--ghost " type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7.5" /></svg><span class="tool-label">Circle</span></button>
+            <button data-tool="text" title="Text note: click to place, Enter to finish, Shift+Enter for a new line (T)" class="ui-button ui-button--ghost " type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7V5h12v2M12 5v14M9 19h6" /></svg><span class="tool-label">Text</span></button>
+          </div>
+          <div class="sep"></div>
+          <div class="style" role="group" aria-label="Style">
+            <input type="color" id="styleColor" title="Colour (applies to the selected annotation too)" aria-label="Colour" value="#e11d48" />
+            <label class="field ui-select-field" title="Line width">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16" stroke-width="1.2" /><path d="M4 12h16" stroke-width="2.2" /><path d="M4 18.5h16" stroke-width="3.6" /></svg>
+              <select id="styleWidth" class="ui-select" aria-label="Line width">
+                <option value="1">1 px</option>
+                <option value="2">2 px</option>
+                <option value="3">3 px</option>
+                <option value="5">5 px</option>
+                <option value="8">8 px</option>
+              </select>
+            </label>
+            <label class="field ui-select-field" title="Text size">
+              <span class="field-glyph" aria-hidden="true">Aa</span>
+              <select id="styleFont" class="ui-select" aria-label="Text size">
+                <option value="12">12</option>
+                <option value="14">14</option>
+                <option value="16">16</option>
+                <option value="20">20</option>
+                <option value="28">28</option>
+              </select>
+            </label>
+          </div>
+          <div class="sep"></div>
+          <button id="btnUndo" class="ui-button ui-button--default icon-btn" title="Undo (Ctrl+Z)" aria-label="Undo" disabled type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5" /><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" /></svg></button>
+          <button id="btnRedo" class="ui-button ui-button--default icon-btn" title="Redo (Ctrl+Y)" aria-label="Redo" disabled type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5" /><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13" /></svg></button>
+          <div class="sep"></div>
+          <div class="zoom" role="group" aria-label="Zoom">
+            <button id="zoomOut" class="ui-button ui-button--default icon-btn" title="Zoom out (Ctrl+−)" aria-label="Zoom out" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg></button>
+            <input type="range" id="zoom" min="25" max="400" step="1" value="100" aria-label="Zoom" aria-valuetext="100%" title="Zoom 100%" />
+            <button id="zoomIn" class="ui-button ui-button--default icon-btn" title="Zoom in (Ctrl++)" aria-label="Zoom in" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></button>
+            <button id="zoomReset" class="ui-button ui-button--default text-btn" title="Actual size: zoom to 100% (Ctrl+0)" aria-label="Zoom to 100%" type="button">1:1</button>
+          </div>
+          <div class="sep"></div>
+          <div class="view-controls" role="group" aria-label="View">
+            <button id="btnSplitView" class="ui-button ui-button--default icon-btn" type="button" aria-label="Split view" aria-pressed="false" aria-controls="viewports" title="Split the document into two views"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></svg></button>
+          </div>
+        </div>
+        <div class="audio-dock" id="audioDock" hidden></div>
+      </section>
+
+      <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" aria-label="Resize the side panel" tabindex="0" title="Drag to resize · double-click to reset"></div>
+      <aside>
+        <div class="tab-body" id="tab-lookup"></div>
+      </aside>
+    </main>
+
+    <button id="btnCoffee" class="ui-button ui-button--ghost coffee-btn" inert data-blocked-by-loader title="Buy me a coffee" aria-label="Buy me a coffee" aria-haspopup="true" aria-expanded="false" aria-controls="coffeeCard" type="button">
+      <svg class="coffee-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <clipPath id="coffeeCup"><path d="M4 9.5h13v5a4.5 4.5 0 0 1-4.5 4.5h-4A4.5 4.5 0 0 1 4 14.5z" /></clipPath>
+        </defs>
+        <g clip-path="url(#coffeeCup)">
+          <rect class="coffee-level" x="3" y="9.9" width="15" height="10" stroke="none" />
+        </g>
+        <g class="coffee-steam">
+          <path d="M8.7 8.4c-1.25-1.05-1.25-2.1 0-3.15s1.25-2.1 0-3.05" pathLength="1" stroke-width="1.45" />
+          <path d="M12 8.4c-1.45-1.2-1.45-2.4 0-3.6s1.45-2.4 0-3.5" pathLength="1" stroke-width="1.45" />
+          <path d="M15.3 8.4c-1.25-1.05-1.25-2.1 0-3.15s1.25-2.1 0-3.05" pathLength="1" stroke-width="1.45" />
+        </g>
+        <path d="M4 9.5h13v5a4.5 4.5 0 0 1-4.5 4.5h-4A4.5 4.5 0 0 1 4 14.5z" />
+        <path d="M17 11h1.6a2.4 2.4 0 0 1 0 4.8H17" />
+        <path d="M3 21.4h15" />
+      </svg>
+    </button>
+
+    <!-- Settings puts this on the page; it is dragged with the right button and remembers where
+         it was left, so it can be parked clear of whatever is being sized. -->
+    <button id="btnFontSizer" class="ui-button ui-button--ghost sizer-btn" hidden inert data-blocked-by-loader title="Font size · drag to move it" aria-label="Font size" aria-haspopup="true" aria-expanded="false" aria-controls="fontSizerCard" type="button">
+      <svg class="sizer-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2.5 18 8 5.5 13.5 18" />
+        <path d="M4.7 13.2h6.6" />
+        <path d="M18.5 5.5v13" />
+        <path d="M15.8 8.2 18.5 5.5l2.7 2.7" />
+        <path d="M15.8 15.8l2.7 2.7 2.7-2.7" />
+      </svg>
+    </button>
+    <div id="fontSizerCard" class="sizer-card" hidden aria-label="Font size"></div>
+
+    <div id="recentMenu" class="menu" popover role="menu" aria-label="File"></div>
+    <!-- Manual, not auto: showing it must not take the menu it belongs to away. -->
+    <div id="recentFiles" class="menu recent-flyout" popover="manual" role="menu" aria-label="Recent files"></div>
+    <div id="filesMenu" class="menu files-menu" popover aria-label="Files in this document"></div>
+    <div id="sectionsMenu" class="menu sections-menu" popover aria-label="Sections the panel shows"></div>
+    <div id="coffeeCard" class="menu coffee-card" popover aria-label="Buy me a coffee">
+      <p class="coffee-hi">Buy me a coffee if you like it.</p>
+      <p class="coffee-bank"><img class="coffee-bank-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAhCAYAAACcE+TUAAAkwklEQVR42u19eXxU1d3395x752buTPYFQghCKELcDcWlhZCRKib4WLHWhdG6dHhcEGvfPlVrtWpt61b0oVarrY5bdeIOjxYmASwDg3YBiRsKSEUgmYSEBLKezJ17z+/94947mYSA2vf9o08/HD9hkrnnnnPuOb/l+9uuwJF2pP2Lt6iIqgAgos6nCCsiLBQhwgoAiLBQDnf/F10/0o60/7VN1DdpmYyRySjpPp8+px92DOe+eDzuCYsjzHKk/TsxiAhrABAWtsbI+NGECCsjmeWg+6NRNSyEJprqtX9mfn7kCI60f+m2fDqECCshXbfa15cf11Vyo9kTK78Oy6dD10MWAgnuaohRW+kB/u01a5Pd0d3JTG1ypB1p/y4aRBEirOxcterYtrPOpbZxk6j1lNOpI9p4p4hG1S/SDPvqX6LmssnUkltIbTfdTInGxhOO7OqR9m/VdjU2ntiSO45aSydSYtxkSpROoha/n/Y2NPxgNJvEbQeiDa3NYyZSYtwkah03iVqKx1HbHXfSV4JYroUvRDhtDEVFVBUirKWvRaNqhqGkhYVQHGynZN4nwkIRTfWaiEZVUd+kZRpVmYbSSOzoXne/z1SD7tyZ32f009zv3TVl9h05rotj3XHrRYYB6PSNiqg60kOSMa8mmuq1kcZi2qvi9M0cM9OTkl5PxpjDjM9R1P+wuUdcz8Tko3lsRiOcgwzcUcYYOffIs0jbBEO0o7jP9f/iORIirLj76/7sbmysylryyPvM7wUYAyDBGAPLHQP5szt/09HQ8HMEEpS5p9tWr/a2v/wy9S28vpRxBg4GAofi8UL+5rdou+UntG/F6hOFCHtdujisEZRJ5GEhFPfHZZawEEp9k0gbS1FhqzYRHuqbNppGHlh9kyaa6rWwEF737y8gAs1hQm0kYYx2kBlE6s0cO/PwMtcSFTbzjuYpSX+KsH/k/SP3aSQBOALBO2xfR3pfRiEaUd+kjTqWs0bXSHU/v4zXZ7SxMw3bg4g+Y75hDJ3hQTrEWRy0tkPtz5dp9aJJS49Z36TtXhM9qaVoIrWVulqggtrG2b8nxk2iRGkFteQX0N5o4w9dgS5EWGt/cwU1j7Wvt42roESZrUFax02m1nGTKVFSRm2330Gj7dnIxtIHGCtjkUCAB2MxCQAIJOwBIkHAt1XB/M1W+m8Aeki30pu91afoVQsMIcKKrocsdzzXSMLm+ZY7hq6HLBGNqu74n35aoB7dols4UMrT1937EwF7DWUxptfVmS7e1KsWGGEhlCAiCoChMQHodXVmeh1hoSAYQXrMSBCbpm7iM7bPkOkxM9cMIHMsBBKErT4FlQPQ9ZCRse6heUVYwfLpBz2b+7s7B7b6FLTlS72uznT3XNdDlit0gjF7PS5x6SHdcolP10NGZv9hh+qei9tiZfZzZTz7QTGBshhz1zhMiGSsUTTVa6gcsEbuzQihpuh6yEj/PeIZv6r2cNePQIK61pefqix55B366EMQA0AAt8kVACAZwAmQANj4Enh+8YslvfkDd/lbqM+48SYwy4TCbB8UgWAPwZxPQA50Q7nuGqiBmhP8NS3b3fM8iEF2NzaOsxib0KsoRo5BKhTJmcV5r6IYWVIqpEjJLM73+rW26urqPZvWrzm5qB9qpx9mUT9UKJIDQEoqlFKJNCmN8uo9WzKJR19QZYhX3/b1+fsisnnXeTAMaF+bYgjgzLLa2rhDJN45sbePTxtXudI4ZebcD9ISKlYmd6tqjkZ0NCwuAaA0sKtpGCE6nxs3rsw+qos9yTs6L5Y9PWDjJ0Bmeebm1bSsA2ANI2iHGNtWrfyWur93jdXTDVZYDOnL/s8VgernQrpuiPomDQOVlh7SLdFUr7nCYG9s0jEE8kKR3GDMavd6P5nR12ekGTUslLayt6s6/TCLBqUGYGdp9Z5uXQ8ZYSG0qZs2FalqcqyUipRSle6zz2jO3q4vqDJcIhx5eC6z/O1vjQWG4Rufxsvc5FKqO6qrqwccRuUuAcfj8QmqmiwCACmV5MyZZ3ySZk5EFMTKJABszvUey7nFpVTk9Omfbc24v1hVk+VSKhIApm89fUtaSDZ7tA+6xnoz10JJXZ195oz3/gkmUdrXl1eqVy1+n8kUwGzGkLDh1ZD7lSDBATBwsmDJQai33QbznofAGAMYZegABu6wCQNBwr5GlgHl6hDyjvtOlnu+By2qK/w0NefkUYsvh1p8OdTsy6FmX3b67xZfDu3RfLTv+edJhIWSOPc71KJnj+jr/K35aO9vH6ZMOLTvjT+P2feHJ6j55K9Tiy+fEr5iavEVU4uvhFryiqn1p7eTq5qbVc2Zz0v7nnmGhAgrri0TFkJrf3AJ7dF99rxcofaGhnMzbZKuhobyzhdeoOYZM52123MlfEXU4sum1iuvTGPVeDzuce6RifMvomZfTsbaiqnFl0OJs+ZR5yuv0sdv/ylvpA30j1WrJiROPJFafNnU7MuhlkmTqTPa+ERUDOH0roYG2ezRqdmXTQlvNrX9+BbKJIbHnniSoOnEvdnE9eE/2aUT6IorFlLjqjU00kZxsfrNN99KPMs/dJ/mpddfX0Yj+8bj8VNnz65J9ysYW0bxDXFZL4ZDiw3rNsxV9Bzi3hxiqkaxdfH0WNcvXkzca88Fxuidd/480RVe6+Jvv8d8BcT1HOKaTkdPPY7i8Q3PfGUtEo2qiYaG6rYzzx0yrMtcaFVBiXGTqG1chQOX7N/dv9uuCFFntPGxxMxZlCgqdb6vGPZpj1FBrWWTKDGugtrGTaKWvEJq++lttK+h4fjR1qTC44GaWwgpbW5TQJAOx0mQHSjp6rZ7+7Yq8GaB5RSCK0qaIwHAYgAbSLqoDa76TSxcuJeWvQlV80HmFYA7coAYgUvAfPsdOHCGw6uD5RRAHegFKRyIjWWYv9mRgiGr/cEl8PjzIT0apJkCLFsru9rKfGT/ntSSh6BCA/KKnfUzSEbglAtauRL6M7olgmFtRl+f7N9/IJX80Y+hWApYXnFaxnBIEHJAH3yM5PU3oPCqKw/o99/LHDtHiaAS82nt9KQQ4HkltmzrE0B/78IEzrler9MNIcJK71XPMLVwLKQCcItAzS0ZOD3BNY8GpuZBzfYCkEiZFsA4PApD0uKI/CmK15e9gj+tWPkBgOPS0GrrVuhVC4yc/FIouUX2CTAApoVlK1chEw7pesiKx+MpxhjUnCIAQC9JLL7pDvbXP1/mESKc1k6S8UFPXjGkxWANdKaJRNdD1uIbfgA1pwBgClJJAQx6IURY+/u70+Zdv+jak1S/H4xxeEnF7//wGKqrZ1152NSPshhD6QGuVy2wIVpTvdbezis91/7XejnQB84ZJAiM4Eh9OAAJDmCyoRMHgdXORXfwovFHzdq9l7PbXxL3P7DW2rINTPGApe9y9Q8BxAEmAWJgvnzQk0/DZOxDAMzVvIiVSQQSnMPng1U0BigbByoscIiKIKUESkogy8qAaRPA/H7oC6qM9FMSQfr9wMmVwMmVUE6qhHL6CVDLylybhnf891JC/ctgmg8gshc35Wjw6ceCTa2AVDnA2TCDiKdZDogFAACpTMOShkwnEKO0zu1/Mcs07/4FGM8CcYI0UmATJwFVx4BN+xrIYw8hmuo1xMqk6O9PGaH/BGceSJVDcgZ+wlSoM6cDJx8H8maBOMAVL6xHHkXHww9Tx/pyVV9QZQS3LgeXvJYGHYzLAMY8MN6KIaTrBgAMrBtfZe1usccgBnAGuX07XPgFwBp6IIKVFLjmsktwzfcuxqwTjgNSAkxRkfQW4sVI/bEiGvXqesjSF1QZscp8+ebKBuofFAAHKsYVozjHD66qeP7ZpxB/J3Ze5p4NwTfmwBOOj7a8h8U3/K1v8+bJU+PxuAcAJJcEaQHM+mJx7x2EroeMFW82Lvu4uQuMqUgNClwXugjFhfu8hw3IBSP22VYOWK72P7C3YGbW/b95nw/2gXFH4DorTguADKHNmMMmZ5yBPVdcWjrtrLMSAOAdu/8d/Zabf8qOrgCMwTQoI+c+7gh1TiwN1aBokI/8Dm23/Yz6VXmsrocMJAKESNBSWbavQr/v7tPASUpizyYvulin7HyQIaA98AsowEUAwBXzfSHCyv7L1wBgkFKCf+PrsC5bcBSlPFJ6UlIBVCLqXY55ygVs3Szj2Reg5BZBAjB7B6D/9gGw8pLTpFR2Q7HGcEvZ1HfbnR7b4xEBI0BmMEggBiBgayIRjaq9H2+xjbMMqQAA+1auOjt1211AdpG9naoK5daboU39WrUF7CDFKlQt5TFx+eWzN/WV0/Gsv3xw6eNg+WMASMh9Cfjq65HM9k/OIdrTwXlJLtGm/ksWlEk9Hyy3GKnwM8i+995zwkIs03XdOBBtmM+5dM8NUBWkXqpPr0khhKitw9FgtkHJPt2Gz6NvHT+p7lsf6XrICj/z3FB/0Y1LL/jODdU1Mx9p/Nvfpr9dXfMuaV6AAMsysCk7O021ASSo+s7HAT0H1kAK355Xi7caoujqHQDTcvH3jR8un1HlO0QKBsEUKah6Hp597U188/TTPg4tDLFRfDdf2NbHN9C8b58P1eODNAbwnXnfwry6+ZOPPnqLOZrBm25bfUqgDVKvszV/s6Ic67/h5j+zA/shFQZODIxsQk5bEmRvs22POJpl3tkQF1w86ZRAYG967MoBy1s58ADD7R8O3P/rN+mjrSDVgyH2YqOkkzCQLx/WE08BJN8XIqzqum4JEda4t6Zlz7IzZr+q17S8boJtgWXZQIMkONC0rKbm9cLa2leyZu39/KCHJsDDTR/jMt9j8TEMyP+goIAFI7AGwR6knZ9BMgJLJaFcewV8dLFaOPecv/9PTU2Hf/ecLXpLja7+8hffc4wjy+VoBg7qH0CvZp3Su278ae0NDdU9jFXRoGETmrtxqungRHqY2hO2IZZKgaqOw+5vVOQ01Iz9u7+mpSN7Vts2b03LnOTzz9f4TDPHJLYUH24GgUBiEMptd6Lwuxew92poDwCUzG5uz6ppqfD8/nHQQL/9qLtaYPV2vxiMxaQIC0V2dZZSv31N5vlBANhgCh3Rhr0AkOrafy3t329rSc0DgIEsIJsblx7CmQjJ4YvH43lew7yYuAdEBEMcwPHTT8H2GTOkK203vjvtweaWdqgeDohunHfOOTuuWhiC2d8P1e/Dqy9GsGnT1LLRaNM0TcwNfAM+roGpGu741RKs37DhUSHCimpCtWMNh2s2yZpSu+S7Fy6A4fFDgjClfAJ+sHjxjQOn7t/jxrsOOUTlgOV697rXjZ+Tc+/S99HTDcm5IyRdI9z2Vg2RMYPFHA0y6xswz7+4vGLenF1ObM3WsA6NZhE1eG+56WZMrYBMJR2oxTP+dfGKewIErnhgPfoYuu/ZbbauXnkStvqgAsApn0ZVbAyaKIs7IRWbWk0GEUQEoVE2iXMFcv1fkPqwaSsjshEUgGOW/HohgpFn2ON9J3KoNuQTffDUBo7DrIgigmEFiFgI2t6ZguXTXxb1TZquVxkJf57tYfDqMB/6HUiT7zApXRcNqNcE83iGfBOmqoqwUPq7Xp1KYhAyywv0HYB6/XUrjj8+IY5Hq5J2e0ajamlgz9ulsTLW/cnH5xE8gKOm2ZnHTBGnRdUIAgTEGAAFsTK5rSzbP/mo8f3Ytx9c8cBseAv43akERGA+0gWAwUql4LngO7Ceeg7M4wciL44RIqx1Xb4cTNMBJQusrBRy5+cA80C2d/wEwK0H7WhOIW64/rr7VVW9v6tnEOQvwJi8fPzy17/EhK8dM2WXa9fV1RnPP//CjfsNCxIqCsaXIz9v7/HTTzrpfJj99UA2drbsh2TsWQBzDuZFBSkCAqefgBV/2Yj2nl5cv2jRot89+ugrTDUBxkE4HMRiAHLwwvP19x0wCFAJVvc+PPzCUzj169seR6wMel0oLfAOpUEAWO3ry4/TbvrZKmpvs+lpSJ7bjEA2PLXlvgQYwIiDzZsL86LzjyqavbNNRKOqXl2dEiIsRTSqRgIBrjswV4jwQ4zf2jZw70PPWR99Aq5qADhkeiYbyinkgjBA8eXC+v0TUCzzPf2eXzGu6yHr6I11puviIkeFcTCoBN2Nexz0wAxgKQNKew9YRw+wrw+04x9QJCvQ9ZAl93cO5UIWlyJ7VtsOXQ8Zrjsx7bqcvxmuS9PFmowrQG8PeGc/cGAAfL8A7+wHM5LgjsPO/g8mghGYnQdsLAkGYhJ9TLkDkSAiCA6tNxEgJ7mNaMdOMNVjewInT0TprO/8A4kAZcQiLL2uzqyurh5g48sBSWCaCrl7F1wpZe1qBjEOWAZQMRGYMweKpsJ4/330xsoX0PLlABH4MUeDjcm1d9brhdz8fjryDsqkWw0f7+7Ah5+1oqWzGxaZOOqoCRgY6IdXJk8LxmLMhZp/Xr8ekiSQ6seN/xnC0S26VV1d/eKcb80FmRY6e7qx5/NdZxxK+u/6ZCt+9F8/6vAO9gFMwZbm/Vj25pq1pBBxxsGIHVaDeIoL8MSzrwEqh2WYuPCiIMZyluvaV1+UUq5XLTD2rn2jMOvJ59+nvW1gnKeZgDknq5BtgbigSDrGCJXkoz144ZTxZ5+9Z1iyoiMIg4jwTOfC69VzIvotNz3MCoodrSEdK4w5UJg55MwAxmz8omTB+s3DaF+2nHjaOzWiub5il3FGwisJBho0YHW2Qna1QXa2gpKDaS8Ny8kfkgfdnQBgCRHWEEioiJWxCIJuSoY7ruJiTZgWZNlYWCdOgzyhEuaJ02CeOA1UUgxISvu2oZrQ9ZDF/d4hQiNAhzUbwQhCum44B6YhGLHni5UxVlIMMm14xto60pHgdFAPUNxIMnp6wTmHNCXY2DFwXc/yk21QFBUAh1JcDM+ZsyGtFHjShPz4w2eYNwfUtx+eRQvBVb8NHTUVVnQlsHy6HQhMGzAE2WPg6u9dgh9eG8L5dWeB9R/Axvc/wA9/+nM8V//HF97LVwtc9/Fry94E4x5A1VATmNWBQIKECCvf/fa5IEoBCsfTL7yIgyPwQxw5u3rmmHD4CZiDPVBUhvBTT0Ca2o/zcnzD+o2mQczuLsz+ZhVIWuCaileXr8BfP/u8B7EyGRZCmbppE3czIQ7Vcgc9PTx06dOkaSDTciiFQ6aDeZReB2XYINjXhXF/3bxDvP2qz6FLA5EgnD3QECsz65uEm9WhTd20iSdfevUH7EDPECNApulbsqFn5Y4jicgC/4//gEf3VvN/KtoJgFkpsPNqkXj79ZzP1qyuHHhjxQk718Uqx9fNXYJAgjzHHwsgZUtOIvS+zExHawzqdXVmSNcNBBLUu3bC6SIs7IgsI0gGkNEP7eb/QtF9V2SVNzaw8sYGVrT8Qt3z/UtBVjJNVCzl4QDAy8v7LUWx9ZWvAGzdhv/uWF+uu2sORmBh+XS0KMrkTdnZTD39VIAM2+DrO4C+teUiU+q4npaOwva76YP3YDECUga0b5wOAMr2MV1ZeOdvkIwBHgWqV9uqlpauYbl5QE8frMhrULL9IJ+ObUX+STitCmRZtobrPoADefuOsQk343BkFy6+6Ls/uvvOCvXZm87OevWVV0CDfWCahmWN6zFA/hoAeKmjM9Xb3w8wIMfvx0svvVpyx893mnf8fKf5l03vgileMEXB2rfewrr424vdQN9I+1uIsFZeVjDpsvPPBVIp9JsMv7pvyTkleYVfaIPIVB9+ftdtgz6y4a6qZ+G+++/Hxuzst4KxGJsxY7tMZ2SMRkdN9ZpeV2eOqa39vgw/+mOMKQFJE0M2KAMxjGpQMwJSv34IA5/097c2NOQ7Z2VrED1kIJCg+W0xieXTlYF46fFTnnzKoFfeACmZ3iw2FHykIYUgwUGmCTa1AuyqK+YW1NZu+Gr1IG76SNpSAY4/vlVUV1dvm1o756MZ22fscPupqnUhlTmBVV8uUj/5JQZj43dkJrwNrC97JPXMsxuGHp7ZGBMAMwYRqZxvZRDuICwz7cnI9GMxsP/Digvt2EpWFui5euQkU73pe0O61V2w98rspUu3jRu3R01q8ptsUoVtS+m5EAu/z8X4dU+lc6kiQasvVn6tevPNtzB/LhRiYMUFUKZ87T7EymSRTF7OyLAPM7cQJPmfk8SXUp7PXnuiFdKUUM85F1VVO5s906ZBdvfb11IqFG7NjSBo+4dHSHYAQFu+LCwo+K2tXBV0dbZBlbLkg0Ke8+CSX0Px5QEA+sQg/vD8i1j6eBhLH38SkdffAOP2DkHPxhsrGn8bj8c9Kkn1ICUSCVpV3cmWaxZefWNedg7AGNb+9V38o3kP6LCGur3zOax/8gP3/gxyoBuARPOBAVy7aNHsTVrR11woe0gyqsyXIiyUeDzuKZ7d/Ftlyb0vwaNBmlY6VsHo0KRJehaMW26FuumD/dtWr/a6kNgtzUUgQZi/2TLql70r/7QGPMeXLnxydISjQWSGkc4BKwV25kwoP711dh7RWiHC2ldikKEcGwJXGOSWT9D9QJu59/a7aO/td1HfP+4121ev6EYgwbv6CqPqWTWwTAMMgEISAxdcNunAW2tTPTt2pNruvocGrlh4rexoS8M4YkinBABAyHG1iab6jGQ6PnTOjLgQYaWotvYJbd5/ACkDxCSYKTEQvBSt37+aep4cNDvuvoeshdf83tq0CeM/LUgVGspGzwXfhpVKgjiDRhoGFt1wee8fpdjX0GD0snrT+Mltj2DvfhsfpwywMwMYZHQ/AgnuS7FHiHntNeRkI8lpQy6zGvnEo2z3twMS1G+eCkSCsLLUF6TVa+NpTYMKXBLSdXtjXLioeNDZ0f7Qhg1HmW/29qWCVy+6AXouiFnQ/QWQjHUZhv+15sQ+MK6AUhJlvmxUFOegYmwuKsbmYfKYbBRm6SBpQc3y4a3onyClchI8qSFPkJOfpId0S6+rM7+eu+fx1194+tNsLwCVIWWZX2iDAMAg92jXXB1iVy0IAhYD4yq2tnbj/kf/e2s8Hp8cQRCHskUCMXv+GX19pOshIxfystTTj1yNkiLAIocJKcPhf7BblmlZSD24FEWtHaKr8Wi/EGElsLyU63rISsXKqvZfHTflK2+AaWo6diZHCNfM38kywKZVgF1x1dwxtbVxJ1fNUPFVi+cvfy4dlWTNrbCW/s55IAkzlYRaWpKrn3WDIcLCGpzXfYa17dO12LgZMssHlpcNevZFmGYSHCo8Xg9SGWkGnRdeMgx7OhFnS69aYCce4q10hD9T6opoVO1hbCo/sG+7XL4S0LKg5BRAvhGFXPYGLKaAZ2mwGBtKwlRnHOcZuGKL+fswSM+BIlJI/eQ2gJiHA2CaF5xzWEkBVjsH3vnnnZVfW3sAAPbe+2swj711pDEwLnejupW0ZAhi9fdB+dlg/hyoE49ahbHLlYH2wj9w4FIOZmu5rgPTRTSqRva2p2Uackpw0VVXOwJAApoXCucwTeCcM0+DKuVbH36w5cV+cBCzYPa047k3XlwFRsuJUx8nUol4cm/73hcuCV4JNbcAO9v3gzjFkfLMcgKrANlKOR6Pe6qrq1N61QJj2+rVp/1o8aKuu37xMNTcrC+wQRwPi+WRIiyUv0/dfPvKVY2/3CdMqJwhtm4Dzjl7zj+uq64+NJcFEtyV9HZeWZ0p6pue7X3wvnNSC68/TxpJQPWMrl3T9gkH82pI/fDHyPrRjd3IOlHH/M0pIcJK9+LXN9LKNeA5/rRZTo6FA4f1hnQ3AywDbM5sKFdePjunpuWdzOwM7maEiqZ6DYw4kQRPpUDSAtmuaLjQo06vM2FJkGmAp1JAygBTAKYQmMoA0wIY2cl0Id3yttTE9VuvqWDn1oKYCqRMMEhwNQuWSrAsCZ6dDSe8r0JKsFQK0sGjel2diVgZc8cDAMtMgaVSTtRISgAKAgkaW1v7Kbvwu8ewujmwwEFmyk4nUDWQQraQHjfOhYlKtsm35wRqPFm33gypeMCkBBQVTM0CUzVAEiymQrlwPrzXXDQhiyjmpntb69eBZSmQZhJKtheW5Fuw1ad0+bzTwA1QygTpBIPLu9GWL0tmN79NHg2UMgDRh8HEHuh1daaUBEgTZKZApgGoKqByQPUiS/OiSPXghGOmYPHiRd+d0dfX1/DWGkjTgEwaOHXmbOyYMf3cmlmzHgt8s/qPs2fOfvrUbV9/6aii4smKApBpon+gBxv/+hevrUEIZBogMwlAYkZfH7kp+Rtmzeq/aXqVp6JyIiwjafeT1rAaDRBBWilIM2V7mZQU10O6dWpfz/0v/vHZwSyzH5QykSQLi65fhNWr1xySy1y7KDNuoS+oMsbUnT1fPPX4xSgqApfWMFDn2iZDWblOYlBWFowHl2Jgb6cYXDf+G/uvXm/Kl/4HiuZxWInSbiWZEfOgdMJiCpg6CVh46ZwxtbXxTGeUrocslpnK3LZmxVne1s5VriVnlpTMLa6tXZ2ZQdrd0NBJ7R2FtrspQ0gwBkiCHFPy0Ba//yfV1dUpN+dmQDPHKIZnhfXZjpOtnS2QlgUU5kI7phID+b4LGmee8T/BWIwl93Wk7DwwgMYW/fT16jMeCMbs1GzEyliSsQepo+MHzIHZA/llk6Lf+mZzMBZLL+SjYvJO6cJL1qefzTP37AENpMCK8qEdUwkzL/fqnJqWpwAggiCCiACxMjYIfhvaWu9Kbt8K9AyC6zqUKRVgk456bovff92MGduTmank3cuXE/X1ASTBi0t6cuvq8kR9k4b8NpkUyRT6esEL8uE5sz2toZMrC00M9NmHUlL8orcmcdnGd6c9u2vnzkuHXDWOO8+ThcL8AvhyvK8xiQXVtp9fW/ZGTtIy7KVMnDj541P6e04aLX3+5deWUXKgFwDDxImT4EmqYw6Y3e37OjoARsj2++Gt83kSCFBw+VApw8aNlfM+3/XZG26mU0XFxEtnzaqJ2FHzeNuuz3eOdeVuZWVJzimnzOtz7cl1XEl1tLcCxEEMKB0zBrrPp1VXV6e+lAMoLJRYMMYCSPC+WPkbxsJFZzPDAFfVgzSHm1XF0tpAItWxF1lP/R7G9TdBydbTsIoPYyi3tzOOZYCdUQ1ccVVg3Ly5674wk3JkgdCI77XM79KFUk6NhptxO6ySUIQ1Ud+kjcSi6TGHioIUt9/hildGW+NBma52RVrazTesys35PiyEN6PYZ9h1t6AqXeCVWRWZWanoVk6OUg04rIBo6Lo3XZw0ohgpsygps7DsoEKqQ9RfH1Skduh+wwughgrEtFEyhrXRCqwyz/X/e/15RpXo1rdWnZOYdiIlxjrFUeMmOxm5E0fJ7p1A+xsaGkU0qrbd+jNqyRtHraWThgqrMn/K7Htaxk6gxMxZlGhoqHYrUkfP5nU2NFbpsKUDaRArk25mo2MLpIuGYgEguHW5UxyzwHBzqYKIWBgIQter7BoNvc4QTfVaEJsRdA8mEaBIACREWNm0qY+csQn5bbIMbQzzE1amNBxZrOOMa7r2CQBFRKMMSFBYCM2Nojr32oVdTp0IIkELwQimbtpkYcZwH6LtataNsBCKvsCJxLprc/DyaPlFB5UIh4USASwhoADw6Hpo0HmewXg87pkR2Axdr7LCQighvcqJu9hYHLEyhghSIQdyhIVwMg+c52/LlyMLp9J4OSwUIWAXvlUGrMxakmHu60DGXIlKS19QZQ2vwoykYZCIRlUkAnCeBU7xmBVB0Aot0IcVh412Vl+JOcJCiQRAAKyp2Zt4dXX1io6GhtVG6PqzmJECU5G2HzJfySN7OqFH/ggv0XkxBBC46EBWX8GPk6l7HgLTPRm6w9YnzIGK/IxZYFd8/8zS2rlxEY2qoTrdPPzLuTIk/7A64xESpknY5bMH1TZnaBpHEmqZkmaYlAoPaYp0XXlGuWu6Jn6ktBsh9TPrRQ6qQXeujZTq6fckuRomGlXFp8/pI0ta3TU5QSfNLTkepvVGaKgRmsY7mlbJfN50WfGXKE9115C5D4fSIm7p6ajMnKHFDkIGznmNplkOVWuevtcdz1nfP6Nh3HVnzvnu2rWntkw5gRJj7boOWxM4dR5jy2jfysaXM8/C3d+2W2+nltyx1FbqaAxHc7SNnUCJWbOoY+Wqmi/zXq1DqunD1I0rhwoeiqjzwgPnc9T7RxT6Z0AL5XDvLRrtZQSjFRId7qUDh3rBwJc6uNFq3DMZ9RDXM59rtHm/7Hua3Pr/L9t3tPUf9nxHq5c/xB59mTV/1Zr0g+gj4/7OaMOGlvFTKFFyVJo5Ev5c2r9sOYlo1DvaOQFAx/1LqLlwfLq4KjFmPLVedAntXbXybHc/vzSDHGlH2r9y+8tf1pzcMvlYaimdSC0lpdTZGH3MtVkPJ1T33vozaskeQ4mxEykxaxa1r1o586vMy45s/ZH2r9zqRZM2H5stLJ+u9OW3rzKuuaFGf+ge6H6/jkBCOpV/dCi7R4iw0re00zS3vA/lsu99O6elZuWotedH2pGG/51vVdTS9qwLw2yb0f+FsNzt79qNGWlOOPJu3iPtf32LBIFI0CpDTCISTHsxUZ4yEAkOuqlIOHRA0va05bfJqHBqzY+0I+3fSYMMc8pkvPnzcP87hFGdKEOeua/kPPi/aCIqJl/gAZwAAAAASUVORK5CYII=" alt="Techcombank" width="200" height="33" /></p>
+      <img class="coffee-qr" src="./bank-qr.png" alt="Techcombank QR code" width="160" height="160" />
+      <p class="coffee-row">Dang Thai Van</p>
+    </div>
+    <dialog id="exportDialog" class="dialog export-dialog">
+      <form method="dialog">
+        <h2>Export</h2>
+        <div class="ex-field" role="radiogroup" aria-label="Format">
+          <span class="ex-label">Format</span>
+          <label><input type="radio" name="exFormat" value="pdf" checked /> PDF</label>
+          <label><input type="radio" name="exFormat" value="png" /> Image</label>
+        </div>
+        <label class="ex-keep">
+          <input type="checkbox" id="exKeep" checked />
+          <span><b>Include the original files</b><span class="ex-help">So 4em can open it again with the annotations still editable. Roughly doubles the size.</span></span>
+        </label>
+        <p class="ex-summary" id="exSummary"></p>
+        <div class="order-foot">
+          <button type="submit" value="cancel" class="ui-button ui-button--default ">Cancel</button>
+          <button type="submit" value="export" class="ui-button ui-button--primary primary">Export</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="orderDialog" class="dialog order-dialog">
+      <form method="dialog">
+        <h2>Open these files</h2>
+        <p class="order-intro">They become one document, a run of pages in this order.</p>
+        <div id="orderList"></div>
+        <div class="order-foot">
+          <button type="submit" value="cancel" class="ui-button ui-button--default ">Cancel</button>
+          <button type="submit" value="open" class="ui-button ui-button--primary primary">Open</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="settingsDialog" class="dialog"></dialog>
+    <dialog id="helpDialog" class="dialog">
+      <form method="dialog">
+        <h2>Keyboard shortcuts</h2>
+        <table class="keys">
+          <tr><td><kbd>L</kbd> <kbd>V</kbd> <kbd>N</kbd> <kbd>C</kbd> <kbd>T</kbd></td><td>Lookup, Select, Line, Circle, Text</td></tr>
+          <tr><td><kbd>Alt</kbd> + drag</td><td>Look up from any tool</td></tr>
+          <tr><td>Right-drag</td><td>Pan the document</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + wheel, <kbd>Ctrl</kbd> <kbd>+</kbd>/<kbd>−</kbd></td><td>Zoom</td></tr>
+          <tr><td><kbd>Ctrl</kbd> <kbd>0</kbd></td><td>Zoom to 100% (actual size)</td></tr>
+          <tr><td><kbd>Shift</kbd> while drawing</td><td>Snap line to 45° / perfect circle</td></tr>
+          <tr><td><kbd>Delete</kbd></td><td>Delete the selected annotation</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Cancel / deselect</td></tr>
+          <tr><td><kbd>Ctrl</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Y</kbd></td><td>Undo / redo</td></tr>
+          <tr><td><kbd>Ctrl</kbd> <kbd>O</kbd> / <kbd>Ctrl</kbd> <kbd>S</kbd></td><td>Open files / export them</td></tr>
+          <tr><td><kbd>PgUp</kbd> <kbd>PgDn</kbd></td><td>Previous / next page</td></tr>
+          <tr><td><kbd>Space</kbd></td><td>Play or stop the listening track (when one is attached)</td></tr>
+        </table>
+        <p class="muted">The <b>listening player</b> sits under the document, behind the 🎧 handle in its bottom left corner: click the handle to open or shut it. It opens by itself when the document already has a track. Use <b>Add tracks…</b> in its chooser, or drop audio files (mp3, m4a or wav) on the window, to attach tracks to the open document; the chooser on the left switches between them and drag reorders them. Drag across the waveform to pick a phrase, then press <kbd>Space</kbd> to play just that; drag inside the selection to slide it, its edges to trim it, or click to set where playback starts. Tracks are kept in this browser only, never written into what you export, and are taken off a file in <b>Settings → Storage</b>.</p>
+        <p class="muted">Every section of the side panel <b>rolls up</b> when you click its title, and the <b>Sections</b> button above it chooses which ones are shown at all. Both are remembered for next time.</p>
+        <p class="muted"><b>Split view</b>, at the end of the floating toolbar, opens a second view of the same combined document. Each view has its own file bar, scroll and zoom. Click or focus a view to use the shared toolbar there; its file menu jumps to a file within the combined document. File additions, removals, ordering, annotations and Undo are shared. Drag the divider to resize, use its arrow keys, or double-click to reset. Toggle Split view again to keep the active view in one pane.</p>
+        <p class="muted">Annotations are kept in this browser automatically. <b>File → Export</b> writes every page of the document as one file, as a PDF or as an image, with the annotations drawn in so other apps show them. Pages are laid out as A4 sheets, on screen and in the export: a page bigger than A4 is scaled down to fit, a smaller one is centred at its own size. Asked to include the original files, it keeps them inside, and opening that file in 4em gives back the document with its annotations editable again.</p>
+        <p class="muted">With an AI profile chosen under <b>Settings → Audio transcription</b>, new listening tracks are transcribed in the background. Click a number below the waveform to select its sentence; <kbd>Space</kbd> or Play starts it, and clicking the same number again deselects it. The <b>teal timing range</b> and <b>blue free selection</b> both move by dragging inside and resize from their edges. Hold <kbd>Alt</kbd> to reach a covered range or <kbd>Shift</kbd> while dragging to draw a new free selection. Timing edits apply when released; Undo timing or <kbd>Ctrl</kbd>+<kbd>Z</kbd> restores the previous timing. Results and corrections are kept in this browser with the audio.</p>
+        <div class="dialog-actions"><button class="ui-button ui-button--primary primary" value="close" type="submit">Close</button></div>
+      </form>
+    </dialog>
+    <div class="loader" id="loader" role="dialog" aria-modal="true" aria-label="Loading 4em">
+      <div class="loader-box">
+        <svg class="loader-icon" viewBox="0 0 128 128" aria-hidden="true">
+          <rect width="128" height="128" rx="28" fill="#2563eb" />
+          <rect x="30" y="22" width="60" height="78" rx="6" fill="#fff" />
+          <path d="M40 40h40M40 52h40M40 64h24" stroke="#93c5fd" stroke-width="5" stroke-linecap="round" />
+          <g class="loader-lens">
+            <circle cx="80" cy="82" r="16" fill="none" stroke="#f59e0b" stroke-width="7" />
+            <path d="M91 93l12 12" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" />
+        </g>
+        </svg>
+        <div class="loader-brand">4em</div>
+        <div class="loader-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading"><i></i></div>
+        <div class="loader-text" id="loaderText">Loading the app…</div>
+        <div class="loader-detail" id="loaderDetail"></div>
+        <div class="loader-ask" id="loaderAsk" hidden></div>
+      </div>
+    </div>
+    <div class="toasts" id="toasts" aria-live="polite" popover="manual"></div>
+    <input type="file" id="fileInput" accept=".pdf,image/*,.json" multiple hidden />
+    <input type="file" id="audioInput" accept=".mp3,.m4a,.wav,audio/*" multiple hidden />
+  </body>
+</html>
